@@ -65,7 +65,7 @@ done
 pass "init, commit, log, grep, clone, fsck"
 
 if [ "$(uname -s)" = Linux ] && ! LC_ALL=C grep -a -q 'ld-musl' "$GIT"; then
-  max="$(LC_ALL=C grep -aoh 'GLIBC_2\.[0-9]*' "$GIT" "$DIST/libexec/git-core/git-remote-http" | sort -uV | tail -n 1)"
+  max="$(LC_ALL=C grep -aoh 'GLIBC_2\.[0-9]*' "$GIT" "$DIST/libexec/git-core/git-remote-http" | sort -uV | tail -n 1)" || true
   if [ -n "$max" ]; then
     [ "$(printf '%s\n' "$max" GLIBC_2.17 | sort -V | tail -n 1)" = GLIBC_2.17 ] \
       || fail "needs $max, newer than GLIBC_2.17"
