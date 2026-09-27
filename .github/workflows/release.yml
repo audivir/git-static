@@ -56,7 +56,7 @@ jobs:
           tar -czf git-static-${{ matrix.asset }}.tar.gz -C "$dist" bin libexec share
       - name: Collect sources
         if: matrix.asset == 'linux-amd64'
-        run: tar -czf git-static-sources.tar.gz --exclude=.git vendor
+        run: tar -czf git-static-sources.tar.gz --exclude=.git --exclude=vendor/openssl vendor
       - uses: actions/upload-artifact@v7
         with:
           name: git-static-${{ matrix.asset }}
