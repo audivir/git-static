@@ -5,7 +5,21 @@ on:
 permissions:
   contents: write
 jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+      - name: Check that the release tag matches vendor/git
+        run: |
+          git_version="$(sed -n 's/^DEF_VER=//p' vendor/git/GIT-VERSION-GEN)"
+          if [ "$git_version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Release tag $GITHUB_REF_NAME does not match vendor/git ($git_version)"
+            exit 1
+          fi
   build:
+    needs: check-version
     strategy:
       matrix:
         include:
