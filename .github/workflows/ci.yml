@@ -1,0 +1,58 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  prek:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: j178/prek-action@v3.0.0
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
+          - os: ubuntu-latest
+            static: true
+          - os: ubuntu-24.04-arm
+            static: true
+          - os: macos-15
+          - os: ubuntu-latest
+            tls: openssl
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - uses: mlugg/setup-zig@v2.2.1
+        with:
+          version: 0.15.2
+      - name: Install autotools (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y autoconf automake libtool
+      - name: Install autotools (macOS)
+        if: runner.os == 'macOS'
+        run: brew install autoconf automake libtool
+      - run: ./build.sh ${{ matrix.static && '--static' || '' }} --tls ${{ matrix.tls || 'mbedtls' }}
+      - if: ${{ !matrix.static }}
+        run: ./tests/run_smoke_tests.sh --dist dist${{ matrix.tls == 'openssl' && '-openssl' || '' }}
+      - name: Test on CentOS 7 and Rocky Linux 8
+        if: ${{ runner.os == 'Linux' && !matrix.static && !matrix.tls }}
+        run: |
+          for image in centos:7 rockylinux:8; do
+            docker run --rm -v "$PWD":/work -w /work "$image" ./tests/run_smoke_tests.sh
+          done
+      - name: Test in Alpine (musl)
+        if: ${{ matrix.static }}
+        run: |
+          docker run --rm -v "$PWD":/work -w /work alpine:3.22 sh -c '
+            apk add --no-cache bash ca-certificates &&
+            ./tests/run_smoke_tests.sh --static'

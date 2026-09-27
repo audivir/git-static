@@ -1,0 +1,20 @@
+[submodule "vendor/git"]
+    path = vendor/git
+    url = https://github.com/git/git.git
+    shallow = true
+[submodule "vendor/curl"]
+    path = vendor/curl
+    url = https://github.com/curl/curl.git
+    shallow = true
+[submodule "vendor/openssl"]
+    path = vendor/openssl
+    url = https://github.com/openssl/openssl.git
+    shallow = true
+[submodule "vendor/zlib"]
+    path = vendor/zlib
+    url = https://github.com/madler/zlib.git
+    shallow = true
+[submodule "vendor/mbedtls"]
+    path = vendor/mbedtls
+    url = https://github.com/Mbed-TLS/mbedtls.git
+    shallow = true

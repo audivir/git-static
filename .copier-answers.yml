@@ -1,0 +1,9 @@
+# Changes here will be overwritten by Copier
+_commit: e730ed7
+_src_path: gh:audivir/copier-template
+description: Static build of git with zlib, Mbed TLS, and curl linked in
+github_org: audivir
+project_name: git-static
+project_slug: git_static
+project_type: shell
+publishable: false

@@ -1,0 +1,39 @@
+This repository's own code (build.sh, tests/, README.md) is licensed under the MIT License;
+see LICENSE.
+
+The git binaries produced by build.sh and published under GitHub Releases embed the following
+third-party projects, vendored unmodified as git submodules under vendor/ at their release tags.
+Each keeps its own license, and the combined binaries are governed by the union of these
+licenses, not by the MIT License above.
+
+git
+  https://git-scm.com
+  Copyright (c) Linus Torvalds, Junio C Hamano, and contributors
+  License: GNU General Public License v2.0 only (GPL-2.0-only), with some parts under
+  compatible licenses (see vendor/git/COPYING and vendor/git/LGPL-2.1)
+
+curl (libcurl)
+  https://curl.se
+  Copyright (c) Daniel Stenberg and contributors
+  License: curl License (MIT-like)
+
+Mbed TLS
+  https://www.trustedfirmware.org/projects/mbed-tls/
+  Copyright The Mbed TLS Contributors
+  License: Apache License 2.0 OR GNU General Public License v2.0 or later; the released
+  binaries use it under GPL-2.0-or-later
+
+zlib
+  https://zlib.net
+  Copyright (c) Jean-loup Gailly and Mark Adler
+  License: zlib License
+
+Because git is GPL-2.0-only, anyone who redistributes these binaries (including the release
+archives from this repo) must satisfy the GPL, such as making the corresponding source available
+and keeping the GPL notice attached. The release workflow attaches the exact vendored sources
+used for the build (git-static-sources.tar.gz) to every release for this purpose.
+
+OpenSSL is vendored under vendor/openssl only for self-built binaries (build.sh --tls openssl)
+and is not part of the released archives. Its Apache License 2.0 is considered incompatible with
+GPL-2.0-only by the Free Software Foundation, so binaries linking git with OpenSSL should not be
+redistributed.
