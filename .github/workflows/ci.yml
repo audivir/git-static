@@ -44,10 +44,10 @@ jobs:
       - run: ./build.sh ${{ matrix.static && '--static' || '' }} --tls ${{ matrix.tls || 'mbedtls' }}
       - if: ${{ !matrix.static }}
         run: ./tests/run_smoke_tests.sh --dist dist${{ matrix.tls == 'openssl' && '-openssl' || '' }}
-      - name: Test on CentOS 7 and Rocky Linux 8
+      - name: Test on CentOS 7, Rocky Linux 8, and Debian without CA certificates
         if: ${{ runner.os == 'Linux' && !matrix.static && !matrix.tls }}
         run: |
-          for image in centos:7 rockylinux:8; do
+          for image in centos:7 rockylinux:8 debian:stable-slim; do
             docker run --rm -v "$PWD":/work -w /work "$image" ./tests/run_smoke_tests.sh
           done
       - name: Test in Alpine (musl)

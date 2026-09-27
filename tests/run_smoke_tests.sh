@@ -78,8 +78,14 @@ if [ "$OFFLINE" = 0 ]; then
   if [ ! -e /etc/ssl/cert.pem ] && [ -e /etc/pki/tls/cert.pem ]; then
     export SSL_CERT_FILE=/etc/pki/tls/cert.pem
   fi
-  "$GIT" ls-remote https://github.com/git/git HEAD >/dev/null || fail "https"
-  pass "https"
+  if [ -e /etc/ssl/certs ] || [ -e /etc/ssl/cert.pem ]; then
+    "$GIT" ls-remote https://github.com/git/git HEAD >/dev/null || fail "https"
+    pass "https"
+  fi
+  certs="$DIST/share/git-core/certs"
+  GIT_SSL_CAPATH="$certs" GIT_SSL_CAINFO="$certs/cacert.pem" "$GIT" ls-remote https://github.com/git/git HEAD >/dev/null \
+    || fail "https with the bundled certificates"
+  pass "https with the bundled certificates"
 fi
 
 echo "all smoke tests passed"

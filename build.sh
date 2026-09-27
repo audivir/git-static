@@ -269,6 +269,14 @@ fi
   if [ "$WITH_RUST" = 1 ]; then cp "target/$RUST_TARGET/release/libgitcore.a" "$DIST/lib/"; fi
 )
 
+echo ">>> CA certificates"
+mkdir -p "$DIST/share/git-core/certs"
+(
+  cd "$DIST/share/git-core/certs"
+  curl -fsSLO https://curl.se/ca/cacert.pem
+  curl -fsSL https://curl.se/ca/cacert.pem.sha256 | shasum -a 256 -c - >/dev/null
+)
+
 GIT_BIN="$DIST/bin/git"
 echo
 echo ">>> done: $GIT_BIN"

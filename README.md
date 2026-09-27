@@ -48,10 +48,14 @@ binaries use Mbed TLS because it is available under GPL-2.0-or-later, while Open
 license is considered incompatible with git's GPL-2.0-only; building the OpenSSL variant for your
 own use is fine.
 
-HTTPS reads the CA certificates in `/etc/ssl/certs` on Linux and `/etc/ssl/cert.pem` on macOS,
-so install your distribution's `ca-certificates`. With `--tls openssl`, OpenSSL's default
-locations are used instead, which miss RHEL/CentOS 7 and 8; point git at their bundle with
-`git config --global http.sslCAInfo /etc/pki/tls/cert.pem` there.
+HTTPS reads the CA certificates in `/etc/ssl/certs` on Linux and `/etc/ssl/cert.pem` on macOS.
+Systems without them can use the Mozilla bundle from [curl.se](https://curl.se/docs/caextract.html)
+in `share/git-core/certs`, e.g. `export GIT_SSL_CAPATH=~/.local/share/git-core/certs`; only set it
+there, as it replaces the system's certificates.
+
+With `--tls openssl`, OpenSSL's default locations are used instead, which miss RHEL/CentOS 7 and 8;
+point git at their bundle with `git config --global http.sslCAInfo /etc/pki/tls/cert.pem` there, or
+at the Mozilla bundle with `GIT_SSL_CAINFO=<prefix>/share/git-core/certs/cacert.pem`.
 
 To run the smoke tests against the build:
 
