@@ -292,11 +292,10 @@ mkdir -p "$DIST/share/man"
   tar -xJf "$MANPAGES" -C "$DIST/share/man"
 )
 
-# make install only adds the bash completion. The zsh one loads the bash one from its own dir.
-echo ">>> completions"
-mkdir -p "$DIST/share/zsh/site-functions" "$DIST/share/git-core/contrib/completion"
-cp "$WORK/src/git/contrib/completion/git-completion.zsh" "$DIST/share/zsh/site-functions/_git"
-cp "$WORK/src/git/contrib/completion/git-completion.bash" "$DIST/share/zsh/site-functions/"
+# make install adds the bash completion; not the zsh one of git, a wrapper of the bash one, as zsh
+# ships a better one.
+echo ">>> prompt"
+mkdir -p "$DIST/share/git-core/contrib/completion"
 cp "$WORK/src/git/contrib/completion/git-prompt.sh" "$DIST/share/git-core/contrib/completion/"
 
 echo
