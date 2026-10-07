@@ -37,6 +37,10 @@ them. Output is installed under `dist/`:
 
 - `dist/bin`, `dist/libexec/git-core`, `dist/share`: a relocatable git install; copy the tree to
   any prefix (e.g. `~/.local`) and run `bin/git`
+- `dist/share/man`: the man pages, which git publishes prebuilt for each release on kernel.org
+- `dist/share/bash-completion/completions/git` and `dist/share/zsh/site-functions/_git`: the
+  completions for bash and zsh (fish ships its own), and
+  `dist/share/git-core/contrib/completion/git-prompt.sh` for the branch in the prompt
 - `dist/lib/libgit.a`: git's static library
 
 Pass `--static` for the fully static musl build on Linux (output in `dist-static/`), `--clean` to

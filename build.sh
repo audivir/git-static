@@ -278,6 +278,27 @@ mkdir -p "$DIST/share/git-core/certs"
 )
 
 GIT_BIN="$DIST/bin/git"
+
+# building the man pages needs asciidoc and xmlto, so take the ones git publishes for each release.
+echo ">>> man pages"
+GIT_VERSION="$("$GIT_BIN" --version | sed 's/^git version //')"
+MANPAGES="git-manpages-$GIT_VERSION.tar.xz"
+mkdir -p "$DIST/share/man"
+(
+  cd "$WORK"
+  curl -fsSLO "https://www.kernel.org/pub/software/scm/git/$MANPAGES"
+  curl -fsSL https://www.kernel.org/pub/software/scm/git/sha256sums.asc |
+    grep " $MANPAGES\$" | shasum -a 256 -c - >/dev/null
+  tar -xJf "$MANPAGES" -C "$DIST/share/man"
+)
+
+# make install only adds the bash completion. The zsh one loads the bash one from its own dir.
+echo ">>> completions"
+mkdir -p "$DIST/share/zsh/site-functions" "$DIST/share/git-core/contrib/completion"
+cp "$WORK/src/git/contrib/completion/git-completion.zsh" "$DIST/share/zsh/site-functions/_git"
+cp "$WORK/src/git/contrib/completion/git-completion.bash" "$DIST/share/zsh/site-functions/"
+cp "$WORK/src/git/contrib/completion/git-prompt.sh" "$DIST/share/git-core/contrib/completion/"
+
 echo
 echo ">>> done: $GIT_BIN"
 "$GIT_BIN" --version

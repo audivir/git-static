@@ -64,6 +64,13 @@ done
 "$GIT" -C "$TMP/clone" fsck --no-progress >/dev/null 2>&1 || fail "fsck"
 pass "init, commit, log, grep, clone, fsck"
 
+[ -f "$DIST/share/man/man1/git-commit.1" ] || fail "man page git-commit.1 missing"
+[ -f "$DIST/share/zsh/site-functions/_git" ] && [ -f "$DIST/share/zsh/site-functions/git-completion.bash" ] \
+  || fail "zsh completion missing"
+bash -c '. "$1" && declare -F __git_main >/dev/null' _ "$DIST/share/bash-completion/completions/git" \
+  || fail "bash completion does not load"
+pass "man pages and completions"
+
 if [ "$(uname -s)" = Linux ] && ! LC_ALL=C grep -a -q 'ld-musl' "$GIT"; then
   max="$(LC_ALL=C grep -aoh 'GLIBC_2\.[0-9]*' "$GIT" "$DIST/libexec/git-core/git-remote-http" | sort -uV | tail -n 1)" || true
   if [ -n "$max" ]; then
